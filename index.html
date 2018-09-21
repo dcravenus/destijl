@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+  <svg id="svgOne" xmlns="http://www.w3.org/2000/svg" width="1000" height="700">
+  </svg>
+
+  <script>
+    const rectangleCount = 10000;
+    const minHeight = 10;
+    const maxHeight = 100;
+    const minWidth = 10;
+    const maxWidth = 70;
+
+    const rects = [];
+
+    var svgns = "http://www.w3.org/2000/svg";
+
+    for(var i=0; i<rectangleCount; i++) {
+      var rect = document.createElementNS(svgns, 'rect');
+      var x = randomIntFromInterval(0, 1000);
+      var y = randomIntFromInterval(0, 700);
+      var height = randomIntFromInterval(minHeight, maxHeight);
+      var width = randomIntFromInterval(minWidth, maxWidth);
+      rect.setAttributeNS(null, 'x', x);
+      rect.setAttributeNS(null, 'y', y);
+      rect.setAttributeNS(null, 'height', height);
+      rect.setAttributeNS(null, 'width', width);
+      //rect.setAttributeNS(null, 'fill', '#'+Math.round(0xffffff * Math.random()).toString(16));
+      rect.setAttributeNS(null, 'fill', getRandomColor());
+
+      if(isRectangleValid(rects, rect)) {
+        rects.push(rect);
+        document.getElementById('svgOne').appendChild(rect);
+      }
+    }
+
+
+  function randomIntFromInterval(min,max)
+  {
+      return Math.floor(Math.random()*(max-min+1)+min);
+  }
+
+  function getRandomColor() {
+    switch(randomIntFromInterval(0,2)) {
+      case 0:
+        return 'blue';
+      case 1:
+        return 'yellow';
+      case 2:
+        return 'red';
+      case 3:
+        return 'black';
+      case 4:
+        return 'white';
+    }
+  }
+
+  function isRectangleValid(rects, rect) {
+    return rects.every((savedRect) => {
+      if(!doRectanglesOverlap(savedRect, rect)){
+        return true;
+      }
+    });
+  }
+
+
+  function doRectanglesOverlap(rect1, rect2) {
+    let rect11 = {
+        x: parseInt(rect1.getAttributeNS(null, 'x')),
+        y: parseInt(rect1.getAttributeNS(null, 'y'))
+      };
+
+    let rect12 = {
+      x: rect11.x + parseInt(rect1.getAttributeNS(null, 'width')),
+      y: rect11.y + parseInt(rect1.getAttributeNS(null, 'height'))
+    };
+
+    let rect21 = {
+      x: parseInt(rect2.getAttributeNS(null, 'x')),
+      y: parseInt(rect2.getAttributeNS(null, 'y'))
+    };
+
+    let rect22 = {
+      x: rect21.x + parseInt(rect2.getAttributeNS(null, 'width')),
+      y: rect21.y + parseInt(rect2.getAttributeNS(null, 'height'))
+    };
+
+    return (rect11.x < rect22.x && rect12.x > rect21.x &&
+    rect11.y < rect22.y && rect12.y > rect21.y);
+
+  }
+
+
+  </script>
+</body>
+</html>
