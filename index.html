@@ -17,21 +17,22 @@
     var svgns = "http://www.w3.org/2000/svg";
 
     for(var i=0; i<rectangleCount; i++) {
-      var rect = document.createElementNS(svgns, 'rect');
-      var x = randomIntFromInterval(0, 1000);
-      var y = randomIntFromInterval(0, 700);
-      var height = randomIntFromInterval(minHeight, maxHeight);
-      var width = randomIntFromInterval(minWidth, maxWidth);
-      rect.setAttributeNS(null, 'x', x);
-      rect.setAttributeNS(null, 'y', y);
-      rect.setAttributeNS(null, 'height', height);
-      rect.setAttributeNS(null, 'width', width);
-      //rect.setAttributeNS(null, 'fill', '#'+Math.round(0xffffff * Math.random()).toString(16));
-      rect.setAttributeNS(null, 'fill', getRandomColor());
+      const rect = {};
+      rect.x = randomIntFromInterval(0, 1000);
+      rect.y = randomIntFromInterval(0, 700);
+      rect.height = randomIntFromInterval(minHeight, maxHeight);
+      rect.width = randomIntFromInterval(minWidth, maxWidth);
+      rect.fill = getRandomColor();
 
       if(isRectangleValid(rects, rect)) {
         rects.push(rect);
-        document.getElementById('svgOne').appendChild(rect);
+        rectEl = document.createElementNS(svgns, 'rect');
+        rectEl.setAttributeNS(null, 'x', rect.x);
+        rectEl.setAttributeNS(null, 'y', rect.y);
+        rectEl.setAttributeNS(null, 'height', rect.height);
+        rectEl.setAttributeNS(null, 'width', rect.width);
+        rectEl.setAttributeNS(null, 'fill', rect.fill);
+        document.getElementById('svgOne').appendChild(rectEl);
       }
     }
 
@@ -67,23 +68,23 @@
 
   function doRectanglesOverlap(rect1, rect2) {
     let rect11 = {
-        x: parseInt(rect1.getAttributeNS(null, 'x')),
-        y: parseInt(rect1.getAttributeNS(null, 'y'))
+        x: parseInt(rect1.x),
+        y: parseInt(rect1.y)
       };
 
     let rect12 = {
-      x: rect11.x + parseInt(rect1.getAttributeNS(null, 'width')),
-      y: rect11.y + parseInt(rect1.getAttributeNS(null, 'height'))
+      x: rect11.x + parseInt(rect1.width),
+      y: rect11.y + parseInt(rect1.height)
     };
 
     let rect21 = {
-      x: parseInt(rect2.getAttributeNS(null, 'x')),
-      y: parseInt(rect2.getAttributeNS(null, 'y'))
+      x: parseInt(rect2.x),
+      y: parseInt(rect2.y)
     };
 
     let rect22 = {
-      x: rect21.x + parseInt(rect2.getAttributeNS(null, 'width')),
-      y: rect21.y + parseInt(rect2.getAttributeNS(null, 'height'))
+      x: rect21.x + parseInt(rect2.width),
+      y: rect21.y + parseInt(rect2.height)
     };
 
     return (rect11.x < rect22.x && rect12.x > rect21.x &&
