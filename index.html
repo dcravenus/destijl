@@ -16,8 +16,13 @@
 
     var svgns = "http://www.w3.org/2000/svg";
 
-    for(var i=0; i<rectangleCount; i++) {
-      const rect = {};
+
+
+  let count = 0;
+
+  function step(timestamp) {
+    count++;
+    const rect = {};
       rect.x = randomIntFromInterval(0, 1000);
       rect.y = randomIntFromInterval(0, 700);
       rect.height = randomIntFromInterval(minHeight, maxHeight);
@@ -25,7 +30,6 @@
       rect.fill = getRandomColor();
 
       if(isRectangleValid(rects, rect)) {
-        rects.push(rect);
         rectEl = document.createElementNS(svgns, 'rect');
         rectEl.setAttributeNS(null, 'x', rect.x);
         rectEl.setAttributeNS(null, 'y', rect.y);
@@ -33,8 +37,23 @@
         rectEl.setAttributeNS(null, 'width', rect.width);
         rectEl.setAttributeNS(null, 'fill', rect.fill);
         document.getElementById('svgOne').appendChild(rectEl);
+        rect.el = rectEl;
+        rects.push(rect);
+
       }
-    }
+
+      if(count === 10) {
+        count = 0;
+        if(rects.length) {
+          rects[0].el.parentNode.removeChild(rects[0].el);
+          rects.splice(0,1);
+        }
+      }
+
+    window.requestAnimationFrame(step);
+  }
+
+  window.requestAnimationFrame(step);
 
 
   function randomIntFromInterval(min,max)
