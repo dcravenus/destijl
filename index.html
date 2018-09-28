@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <style>
+    div {
+      border: solid 3px black;
+    }
+    body {
+      margin: 50px;
+    }
+
+    #svgOne {
+      display: block;
+    }
+  </style>
+</head>
 <body>
 
-  <svg id="svgOne" xmlns="http://www.w3.org/2000/svg" width="1000" height="700">
-  </svg>
+  <div>
+    <svg id="svgOne" xmlns="http://www.w3.org/2000/svg">
+    </svg>
+  </div>
+
 
   <script>
+    const svgHeight = window.innerHeight - 100;
+    const svgWidth = document.querySelector('div').offsetWidth - 6;
+
+    document.getElementById('svgOne').setAttribute('height', svgHeight);
+    document.getElementById('svgOne').setAttribute('width', svgWidth);
+
+
     const rectangleCount = 10000;
     const minHeight = 10;
     const maxHeight = 100;
@@ -18,8 +42,8 @@
 
     for(var i=0; i<rectangleCount; i++) {
       const rect = {};
-      rect.x = randomIntFromInterval(0, 1000);
-      rect.y = randomIntFromInterval(0, 700);
+      rect.x = randomIntFromInterval(0, svgWidth);
+      rect.y = randomIntFromInterval(0, svgHeight);
       rect.height = randomIntFromInterval(minHeight, maxHeight);
       rect.width = randomIntFromInterval(minWidth, maxWidth);
       rect.fill = getRandomColor();
@@ -58,6 +82,9 @@
   }
 
   function isRectangleValid(rects, rect) {
+    if(rect.x + rect.width > svgWidth) return false;
+    if(rect.y + rect.height > svgHeight) return false;
+
     return rects.every((savedRect) => {
       if(!doRectanglesOverlap(savedRect, rect)){
         return true;
